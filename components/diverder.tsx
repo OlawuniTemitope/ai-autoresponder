@@ -2,7 +2,7 @@ import React from 'react'
 
 const diverder = () => {
   return (
-    <div>diverder</div>
+    <div className='bg-amber-600'>break change</div>
   )
 }
 

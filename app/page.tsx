@@ -1,10 +1,26 @@
-import prisma from '@/lib/db';
-import React from 'react'
+// import { Button } from '@/components/ui/button';
+import { caller, getQueryClient, trpc } from '@/trpc/server';
+import Client from './Client';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 const page = async () => {
 
-  return (
+  //   const trpc = useTRPC()
+  // const {data: users} =  useQuery(trpc.getUsers.queryOptions())
+  // const users = await caller.getUsers();
+  const queryClient = getQueryClient();
+
+  void queryClient.prefetchQuery(trpc.getUsers.queryOptions())
+
+  return (<>
     <div className='text-red-500 font-bold'>Hello my Word</div>
+    {/* <Button>
+     {JSON.stringify(users)}
+    </Button> */}
+    <HydrationBoundary state={dehydrate(queryClient)}>
+    <Client/>
+    </HydrationBoundary>
+    </>
   )
 }
 

@@ -1,5 +1,4 @@
-import { authClient } from '@/lib/auth-client';
-import { Button } from '@/components/ui/button';
+
 import { requireAuth } from '@/lib/auth-utils';
 import { caller } from '@/trpc/server';
 import { LogoutButton } from './logout';

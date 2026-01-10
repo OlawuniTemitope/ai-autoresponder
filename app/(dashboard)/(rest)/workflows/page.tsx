@@ -1,11 +1,22 @@
-import AppSidebar from '@/components/app-sidebar'
+import { WorkflowContainer, WorkflowList } from '@/features/workflow/components/workflows'
 import { requireAuth } from '@/lib/auth-utils'
-import React from 'react'
+import { HydrateClient } from '@/trpc/server'
+import React, { Suspense } from 'react'
+
+import { ErrorBoundary } from 'react-error-boundary'
 
 const page = async () => {
   await requireAuth()
   return (
-   <div></div>
+  <WorkflowContainer>
+   <HydrateClient>
+    <ErrorBoundary fallback={<div>Something went wrong.</div>}>
+      <Suspense fallback={<div>Loading...</div>}>
+      <WorkflowList/>
+      </Suspense>
+    </ErrorBoundary>
+   </HydrateClient>
+   </WorkflowContainer>
   )
 }
 

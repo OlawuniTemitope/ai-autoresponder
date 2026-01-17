@@ -1,22 +1,24 @@
-<<<<<<< HEAD
-<<<<<<< Updated upstream
+
 import AppSidebar from '@/components/app-sidebar'
-=======
+
+import {SearchParams} from "nuqs/server"
 import { WorkflowContainer, WorkflowList } from '@/features/workflow/components/workflows'
 import { prefetchWorkFlows } from '@/features/workflow/server/prefetch'
->>>>>>> Stashed changes
-=======
-import { WorkflowContainer, WorkflowList } from '@/features/workflow/components/workflows'
->>>>>>> 6846ae5742677ad2e618a0197cc5ef75b54ebc72
 import { requireAuth } from '@/lib/auth-utils'
 import { HydrateClient } from '@/trpc/server'
 import React, { Suspense } from 'react'
 
 import { ErrorBoundary } from 'react-error-boundary'
+import { workflowsPaaramsLoader } from '@/features/workflow/server/params-loader'
 
-const page = async () => {
+type Props = {
+  searchParams: Promise<SearchParams>;
+}
+
+const page = async ({searchParams}:Props) => {
+  const params = await workflowsPaaramsLoader(searchParams)
   await requireAuth()
-  prefetchWorkFlows()
+  prefetchWorkFlows(params)
   return (
   <WorkflowContainer>
    <HydrateClient>

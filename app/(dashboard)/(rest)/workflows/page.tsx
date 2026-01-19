@@ -2,7 +2,7 @@
 import AppSidebar from '@/components/app-sidebar'
 
 import {SearchParams} from "nuqs/server"
-import { WorkflowContainer, WorkflowList } from '@/features/workflow/components/workflows'
+import { WorkflowContainer, WorkFlowError, WorkflowList, WorkFlowLoading } from '@/features/workflow/components/workflows'
 import { prefetchWorkFlows } from '@/features/workflow/server/prefetch'
 import { requireAuth } from '@/lib/auth-utils'
 import { HydrateClient } from '@/trpc/server'
@@ -22,8 +22,8 @@ const page = async ({searchParams}:Props) => {
   return (
   <WorkflowContainer>
    <HydrateClient>
-    <ErrorBoundary fallback={<div>Something went wrong.</div>}>
-      <Suspense fallback={<div>Loading...</div>}>
+    <ErrorBoundary fallback={<WorkFlowError/>}>
+      <Suspense fallback={<WorkFlowLoading/>}>
       <WorkflowList/>
       </Suspense>
     </ErrorBoundary>

@@ -1,8 +1,10 @@
 import {generateSlug}  from "random-word-slugs"
 import {PAGINATION} from "@/config/constant";
 import prisma from "@/lib/db";
+import type {Node, Edge} from "@xyflow/react";
 import { createTRPCRouter, premiumProcedure, protectedProcedure } from "@/trpc/init";
 import z from "zod";
+import { NodeType } from "@/lib/generated/prisma/enums";
 
 export const workflowsRouter = createTRPCRouter({
     create: premiumProcedure
@@ -10,9 +12,17 @@ export const workflowsRouter = createTRPCRouter({
         return prisma.workflow.create({
             data:{
                 name: generateSlug(3),
-                userId: ctx.auth.user.id
+                userId: ctx.auth.user.id,
+                nodes: {
+                    create: {
+                        type: NodeType.INITIAL,
+                        position: { x: 0, y: 0 },
+                        name: NodeType.INITIAL,
+                    }
+                    }
+                }
             },
-        })
+        )
         }),
         remove: protectedProcedure.input(z.object({id:z.string()}))
         .mutation(({input, ctx})=>{
@@ -34,11 +44,34 @@ export const workflowsRouter = createTRPCRouter({
             })
         }),
         getOne: protectedProcedure.input(z.object({id:z.string()}))
-        .query(({input, ctx})=>{
-            return prisma.workflow.findUniqueOrThrow({
-                where: {id:input.id, userId:ctx.auth.user.id}
-            })
-        }),
+        .query( async ({input, ctx})=>{
+            const workflow = await prisma.workflow.findUniqueOrThrow({
+                where: {id:input.id, userId:ctx.auth.user.id},
+                include: {nodes: true, connections: true}
+            });
+            const nodes:Node[] = workflow.nodes.map((node)=>({
+                id: node.id,
+                position: node.position as {x:number, y:number},
+                type: node.type,
+                data:(node.data as Record<string, unknown> || {}),
+        }))
+
+        const edges:Edge[] = workflow.connections.map((connection)=>({
+            id: connection.id,
+            sourceHandle: connection.fromOutput,
+            targetHandle: connection.toInput,
+            source: connection.fromNodeId,
+            target: connection.toNodeId,
+        }));
+
+        return{
+            id: workflow.id,
+            name: workflow.name,
+            nodes,
+            edges,
+        }
+    }),
+
         getMany: protectedProcedure.
         input(
             z.object({page: z.number().default(PAGINATION.DEFAULT_PAGE), 

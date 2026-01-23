@@ -118,7 +118,8 @@ const EditorHeader = ({workflowId}:{workflowId:string}) => {
         <SidebarTrigger/>
         <div className='flex flex-row items-center gap-x-4
         w-full justify-between'>
-            <></>
+            <EditorBreadCrumbs workflowId={workflowId}/>
+            <EditorSaveButton workflowId={workflowId}/>
         </div>
     </header>
   )

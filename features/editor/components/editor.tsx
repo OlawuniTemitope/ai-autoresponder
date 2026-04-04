@@ -2,15 +2,20 @@
 
 import { ErrorView, LoadingView } from "@/components/entity-components"
 import { useSuspenceWorkflow } from "@/features/workflow/hooks/use-workflows"
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import {Node, Edge, applyEdgeChanges, applyNodeChanges,
      addEdge, NodeChange, Connection, ReactFlow, EdgeChange,
       Background, Controls, MiniMap,
       Panel} from "@xyflow/react"
+      import { nodeComponents } from "@/config/node-components"
+      import { AddNodeButton } from "./add-node-button"
+      import { useSetAtom } from "jotai"
+      import { editorAtom } from "../store/atom"
+      
       import '@xyflow/react/dist/style.css';
-import { nodeComponents } from "@/config/node-components"
-import { AddNodeButton } from "./add-node-button"
-
+import { NodeType } from "@/lib/generated/prisma/enums"
+import ExecuteWorkflowButton from "./execute-workflow-button"
+      
 export const EditorLoading = () =>{
     return <LoadingView message="Loading editor"/>
 }
@@ -24,6 +29,8 @@ export const EditorError = () =>{
 export const Editor =({workflowId}:{workflowId:string})=>{
 
     const {data: workflow} = useSuspenceWorkflow(workflowId);
+
+    const setEditor = useSetAtom(editorAtom)
 
       const [nodes, setNodes] = useState<Node[]>(workflow.nodes);
       const [edges, setEdges] = useState<Edge[]>(workflow.edges);
@@ -44,6 +51,10 @@ export const Editor =({workflowId}:{workflowId:string})=>{
             [],
         );
 
+        const hasManualTrigger = useMemo(()=>{
+            return nodes.some((node)=>node.type === NodeType.MNUAL_TRIGGER)
+        },[nodes])
+
 
     return (
         <div className="size-full">
@@ -54,7 +65,13 @@ export const Editor =({workflowId}:{workflowId:string})=>{
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
             nodeTypes={nodeComponents}
+            onInit={setEditor}
             fitView
+            snapGrid={[10, 10]}
+            snapToGrid
+            panOnScroll
+            panOnDrag={false}
+            selectionOnDrag
             >
                 <Background/>
                 <Controls/>
@@ -62,6 +79,11 @@ export const Editor =({workflowId}:{workflowId:string})=>{
                 <Panel position="top-right">
                     <AddNodeButton/>
                 </Panel>
+                {
+                <Panel position="bottom-center">
+                    <ExecuteWorkflowButton workflowId={workflowId}/>
+                </Panel>
+                }
             </ReactFlow>
         </div>
     )

@@ -114,7 +114,7 @@ export const NodeSelector = ({open, onOpenChange,
                                             alt={nodeType.label} 
                                             className="size-5 object-contain rounded-sm"/>)
                                     : ( <Icon className="size-5"/>)}
-                                    <div className="flex flex-col items-start  text-left">
+                                     <div className="flex flex-col items-start  text-left">
                                         <span className="font-medium text-sm">{nodeType.label}</span>
                                         <span className="text-xs text-muted-foreground">{nodeType.description}</span>
                                     </div>
@@ -143,6 +143,7 @@ export const NodeSelector = ({open, onOpenChange,
                                     : ( <Icon className="size-5"/>)}
                                     <div className="flex flex-col items-start  text-left">
                                         <span className="text-xs to-muted-foreground">{nodeType.label}</span>
+                                        <span className="text-xs text-muted-foreground">{nodeType.description}</span>
                                     </div>
                                 </div>
                             </div>

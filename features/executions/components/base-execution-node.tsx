@@ -1,34 +1,50 @@
 "use client"
 
-import { BaseNode, BaseNodeContent } from "../../../components/base-node"
-import { BaseHandle } from "../../../components/base-handle"
+import { BaseNode, BaseNodeContent } from "../../../components/react-flow/base-node"
+import { BaseHandle } from "../../../components/react-flow/base-handle"
 import { WorkflowNode } from "../../../components/workflow-node"
 import { LucideIcon } from "lucide-react";
 import { memo } from "react";
 import Image from "next/image";
-import { NodeProps, Position } from "@xyflow/react";
+import { NodeProps, Position, useReactFlow } from "@xyflow/react";
+import { NodeStatus, NodeStatusIndicator } from "@/components/react-flow/node-status-indicator";
 
 
 interface BaseExecutionNodeProps extends NodeProps {
     children?: React.ReactNode;
     description?: string;
     name: string;
+    status: NodeStatus;
     icon: LucideIcon | string;
     onSettings?: () => void;
     onDoubleClick?: () => void;
-    onDelete?: () => void;
 }
 
 export const BaseExecutionNode = memo(({
+    id,
     children,
+    status = "initial",
     description,
     name,
     icon: Icon,
     onSettings,
     onDoubleClick,
-    onDelete, 
 }: BaseExecutionNodeProps) => {
-    const handleDelete = () => {};
+    const {setNodes, setEdges} = useReactFlow();
+
+    const handleDelete = () => {
+        setNodes((currentNodes)=>{
+            const updatedNodes = currentNodes.filter(
+                (node) => node.id !== id);
+            return updatedNodes;
+        });
+
+        setEdges((currentEdges)=>{
+            const updatedEdges = currentEdges.filter(
+                (edge) => edge.source !== id && edge.target !== id);
+            return updatedEdges;
+        })
+    };
     return (
         <WorkflowNode
             name={name}
@@ -36,7 +52,11 @@ export const BaseExecutionNode = memo(({
             onSettings={onSettings}
             onDelete={handleDelete}
         >
-            <BaseNode onDoubleClick={onDoubleClick}>
+            <NodeStatusIndicator
+            status={status}
+            variant="border"
+            >
+            <BaseNode status={status} onDoubleClick={onDoubleClick}>
                 <BaseNodeContent>
                     {
                         typeof Icon === "string" ? (
@@ -58,6 +78,7 @@ export const BaseExecutionNode = memo(({
                     />
                 </BaseNodeContent>
             </BaseNode>
+            </NodeStatusIndicator>
         </WorkflowNode>
     );
 });

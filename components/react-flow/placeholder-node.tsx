@@ -1,23 +1,24 @@
 "use client";
 
-import {type ReactNode } from "react";
+import {forwardRef, type ReactNode } from "react";
 import {
   Handle,
   Position,
   type NodeProps,
 } from "@xyflow/react";
 
-import { BaseNode } from "@/components/base-node";
+import { BaseNode } from "@/components/react-flow/base-node";
 
 export type PlaceholderNodeProps = Partial<NodeProps> & {
   onClick?: () => void;
   children?: ReactNode;
 };
 
-export function PlaceholderNode({ children, onClick }: PlaceholderNodeProps) {
+export const PlaceholderNode = forwardRef<HTMLDivElement, PlaceholderNodeProps>(({ children, onClick }, ref) => {
 
   return (
     <BaseNode
+      ref={ref}
       className="bg-card w-auto h-auto border-dashed border-gray-400 p-4 text-center
        text-gray-400 shadow-none cursor-pointer hover:border-gray-500 hover:bg-gray-500"
       onClick={onClick}
@@ -37,4 +38,4 @@ export function PlaceholderNode({ children, onClick }: PlaceholderNodeProps) {
       />
     </BaseNode>
   );
-}
+});

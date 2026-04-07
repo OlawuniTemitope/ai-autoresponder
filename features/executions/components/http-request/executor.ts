@@ -1,10 +1,16 @@
+import Handlebars from "handlebars"
 import { NodeExecutor } from "@/features/executions/types";
 import { NonRetriableError } from "inngest";
 import ky, { Options as KyOptions } from "ky"
 
+Handlebars.registerHelper("json", (context)=>
+   { const jsonString = JSON.stringify(context, null, 2);
+    const safestring = new Handlebars.SafeString(jsonString)
+    return safestring
+   })
 type HttpRequestData = {
-    variableName?: string,
-    endpoint?: string,
+    variableName: string,
+    endpoint: string,
     method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
     body?: string,
 }
@@ -25,15 +31,22 @@ export const httpRrequestExecutor: NodeExecutor<HttpRequestData> = async ({
     if(!data.variableName){
         throw new NonRetriableError("Variable name not configured")
     }
- 
+    if(!data.method){
+        throw new NonRetriableError("Method name not configured")
+    }
+    
     const result = await step.run("http-request", async () => {
-        const endpoint = data.endpoint!;
+        const endpoint = Handlebars.compile(data.endpoint)(context);
         const method = data.method || "GET";
         const options: KyOptions = {method};
 
         if(["POST", "PUT", "PATCH"].includes(method)){
-            
-                options.body = data.body;
+                const resolved = Handlebars.compile(data.body || "{}")(context)
+                JSON.parse(resolved);
+                options.body = resolved;
+                options.headers= {
+                    "Content-Type":"application/json"
+                }
             }
 
             const response = await ky(endpoint, options);
@@ -51,7 +64,8 @@ export const httpRrequestExecutor: NodeExecutor<HttpRequestData> = async ({
                     data: responseData
                 }
             }
-            if(data.variableName){
+
+            console.log({"contextt":{responseData}}, {paylod: {responsePayload}})
             return {
                 ...context,
                 [data.variableName]: responsePayload,
@@ -60,14 +74,10 @@ export const httpRrequestExecutor: NodeExecutor<HttpRequestData> = async ({
                 //     statusText: response.statusText,
                 //     data: responseData
                 // }
-            }}
-            console.log({"contextt":context}, {paylod: responsePayload})
-            return{
-                ...context,
-                ...responsePayload
             }
+            
         }
     );
-    
+    console.log("HTTP Request result:", result);
     return result
 }

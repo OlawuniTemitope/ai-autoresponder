@@ -2,6 +2,7 @@ import Handlebars from "handlebars"
 import { NodeExecutor } from "@/features/executions/types";
 import { NonRetriableError } from "inngest";
 import ky, { Options as KyOptions } from "ky"
+import { httpRequestChannel } from "@/inngest/channels/http-request";
 
 Handlebars.registerHelper("json", (context)=>
    { const jsonString = JSON.stringify(context, null, 2);
@@ -16,24 +17,49 @@ type HttpRequestData = {
 }
 
 
-
 export const httpRrequestExecutor: NodeExecutor<HttpRequestData> = async ({
     data,
     nodeId,
     context,
-    step
+    step,
+    publish
 }) =>{
+    await publish(
+        httpRequestChannel().status({
+            nodeId,
+            status: "loading"
+        })
+    )
 
     if(!data.endpoint){
+        await publish(
+        httpRequestChannel().status({
+            nodeId,
+            status: "error"
+        })
+    )
         throw new NonRetriableError("HTTP Request node: No endpoint configured")
     }
 
     if(!data.variableName){
+        await publish(
+        httpRequestChannel().status({
+            nodeId,
+            status: "error"
+        })
+    )
         throw new NonRetriableError("Variable name not configured")
     }
     if(!data.method){
+        await publish(
+        httpRequestChannel().status({
+            nodeId,
+            status: "error"
+        })
+    )
         throw new NonRetriableError("Method name not configured")
     }
+try{
     
     const result = await step.run("http-request", async () => {
         const endpoint = Handlebars.compile(data.endpoint)(context);
@@ -78,6 +104,21 @@ export const httpRrequestExecutor: NodeExecutor<HttpRequestData> = async ({
             
         }
     );
-    console.log("HTTP Request result:", result);
+    // console.log("HTTP Request result:", result);
+    await publish(
+        httpRequestChannel().status({
+            nodeId,
+            status: "success"
+        })
+    )
     return result
+} catch (error){
+    await publish(
+        httpRequestChannel().status({
+            nodeId,
+            status: "success"
+        })
+    );
+    throw error;
+}
 }

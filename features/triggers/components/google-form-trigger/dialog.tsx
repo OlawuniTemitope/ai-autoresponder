@@ -51,7 +51,7 @@ export const GoogleFormTriggerDialog = (
                     <div className="flex gap-2">
                         <Input
                         id="webhook-url"
-                        value={webhookUrl}
+                          value={webhookUrl}
                         readOnly
                         className="font-mono text-sm"
                         />

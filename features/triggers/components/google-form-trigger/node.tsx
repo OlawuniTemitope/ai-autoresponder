@@ -1,7 +1,6 @@
 import { NodeProps } from "@xyflow/react";
 import { memo, useState } from "react";
 import { BaseTriggerNode } from "../base-trigger-node";
-import { MousePointerIcon } from "lucide-react";
 
 import { useNodeStatus } from "@/features/executions/hooks/use-node-status";
 import { GoogleFormTriggerDialog } from "./dialog";
@@ -20,7 +19,7 @@ export const GoogleFormTrigger = memo((props:NodeProps) => {
         })
         
     const handleOpenSettings = () => setDialogOpen(true)
-    return(
+    return( 
         <>
             <GoogleFormTriggerDialog
              open={dialogOpen} onOpenChange={setDialogOpen}/>

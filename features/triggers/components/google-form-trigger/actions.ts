@@ -11,6 +11,7 @@ export type GoogleFormTriggerToken = Realtime.Token<
  ["status"]
  >;
 
+
  export async function fetchGoogleFormTriggerRealtimeToken(): Promise<GoogleFormTriggerToken> {
     const token = await getSubscriptionToken(inngest, {
         channel: googleformTriggerChannel(),

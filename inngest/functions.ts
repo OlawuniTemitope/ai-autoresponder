@@ -7,6 +7,8 @@ import { NodeType } from "@/lib/generated/prisma/enums";
 import { getExecutor } from "@/features/executions/lib/executor-registry";
 import { httpRequestChannel } from "./channels/http-request";
 import { manualTriggerChannel } from "./channels/manual-trigger";
+import { googleformTriggerChannel } from "./channels/google-form-trigger";
+import { stripeTriggerChannel } from "./channels/stripe-trigger";
 // import { generateText } from "ai";
 // import { createOpenAI } from '@ai-sdk/openai';
 // import { createAnthropic } from '@ai-sdk/anthropic';
@@ -24,7 +26,9 @@ export const executeWorkflow = inngest.createFunction(
     event: "workflows/execute.workflow",
     channels: [
       httpRequestChannel(),
-      manualTriggerChannel()
+      manualTriggerChannel(),
+      googleformTriggerChannel(),
+      stripeTriggerChannel()
     ]
    },
   async ({ event, step, publish }) => {
@@ -42,7 +46,9 @@ export const executeWorkflow = inngest.createFunction(
       });
         return topologicalSort(workflow.nodes, workflow.connections);
     });
+
     let context = event.data.initialData || {};
+
     for(const node of sortedNodes){
       const executor = getExecutor(node.type as NodeType);
 

@@ -7,22 +7,21 @@ import { Input } from "@/components/ui/input"
 import { CopyIcon } from "lucide-react"
 import { useParams } from "next/navigation"
 import { toast } from "sonner"
-import { generateGoogleFormScript } from "./utils"
 
 
-interface GoogleFormTriggerDialogProps {
+interface StripeTriggerDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
 }
-export const GoogleFormTriggerDialog = (
-    { open, onOpenChange }: GoogleFormTriggerDialogProps
+export const StripeTriggerDialog = (
+    { open, onOpenChange }: StripeTriggerDialogProps
 ) => {
     const  params = useParams()
     const workflowId = params.workflowId as string
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000" 
     
-    const webhookUrl = `${baseUrl}/api/webhooks/google-form?workflowId=${workflowId}`;
+    const webhookUrl = `${baseUrl}/api/webhooks/stripe?workflowId=${workflowId}`;
     
     const  copyToClipboard = async () =>{
         try {
@@ -37,10 +36,10 @@ export const GoogleFormTriggerDialog = (
     <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Google Form Trigger Configuration</DialogTitle>
+                <DialogTitle>Stripe Trigger Configuration</DialogTitle>
                 <DialogDescription>
-                    Use this webhook URL google form's Apps Script to trigger
-                    this workflow when a form is submitted.
+                    Configure this webhook URL in your Stripe dashboard to 
+                    trigger this workflow on payment events.
                 </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -68,56 +67,41 @@ export const GoogleFormTriggerDialog = (
                     <h4 className="font-medium text-sm"> Setun instructions:</h4>
                     <ol className="text-sm to-muted-foreground space-y-1
                     list-decimal list-inside">
-                        <li>Open your Google Form</li>
-                        <li>Click the three dots menu -&gt; Script editor</li>
-                        <li>Copy and paste the script below</li>
-                        <li>Replace WEBHOOK_URL woith your webhook URL above</li>
-                        <li>Save andclick "Triggers" -&gt; Add Triggrs</li>
-                        <li>Choose; For form -&gt; On form submit -&gt; save</li>
+                        <li>Open your Stripe Dashboard</li>
+                        <li>Go to developers -&gt; Webhooks</li>
+                        <li>Click "Add endpoint</li>
+                        <li>Past the webhook URL above</li>
+                        <li>Select events to listen for (e.g., payment_intent.succeded)</li>
+                        <li>Save and copr the signin secrete</li>
                     </ol>
-                </div>
-                <div className="rounded-lg bg-muted p-4 space-y-3">
-                    <h4 className="font-medium text-sm">Google Apps Script</h4>
-                    <Button
-                    type="button"
-                    variant="outline"
-                    onClick={async()=>{
-                        const script = generateGoogleFormScript(webhookUrl);
-                        try {
-                            await navigator.clipboard.writeText(script);
-                            toast.success("Script copied to clipboard")
-                        } catch {
-                            toast.error("Failed to copy Script to clipboard")
-                        }
-                    }}
-                    >
-                        <CopyIcon className="size-4 mr-2"/>
-                        Copy Google App Script
-                    </Button>
-                    <p className="text-xs to-muted-foreground">
-                        This script includes your webhook URL and handles form sybmissions
-                    </p>
                 </div>
                 <div className="rounded-lg bg-muted p-4 space-y-3">
                     <h4 className="font-medium text-sm"> Avaliable variables</h4>
                     <ul className="text-sm to-muted-foreground space-y-1">
                         <li>
-                        <code className="bg-background px-1 py-0.5 rounded">
-                            {"{{googleForm.respondentEmail}}"}
-                        </code>
-                        - Respondent's Email
+                            <code className="bg-background px-1 py-0.5 rounded">
+                                {"{{stripe.amount}}"} - Payment amount
+                            </code>
                         </li>
                         <li>
-                        <code className="bg-background px-1 py-0.5 rounded">
-                            {"{{googleForm.responses['Question Name']}}"}
-                        </code>
-                        - Specific answer
+                            <code className="bg-background px-1 py-0.5 rounded">
+                                {"{{stripe.currency}}"} - Currency code
+                            </code>
                         </li>
                         <li>
-                        <code className="bg-background px-1 py-0.5 rounded">
-                            {"{{json googleForm.respnses}}"}
-                        </code>{" "}
-                        - All responses as JSON
+                            <code className="bg-background px-1 py-0.5 rounded">
+                                {"{{stripe.customerId}}"} - Customer ID
+                            </code>
+                        </li>
+                        <li>
+                            <code className="bg-background px-1 py-0.5 rounded">
+                                {"{{json stripe}}"} - Full even data as JSON
+                            </code>
+                        </li>
+                        <li>
+                            <code className="bg-background px-1 py-0.5 rounded">
+                                {"{{stripe.eventType}}"} - type (e.g payment_intent.succeded)
+                            </code>
                         </li>
                     </ul>
                 </div>

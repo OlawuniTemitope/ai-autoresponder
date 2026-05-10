@@ -1,4 +1,3 @@
-import { de } from "zod/v4/locales";
 import { Button } from "./ui/button";
 import { AlertTriangleIcon, Loader2Icon, MoreVerticalIcon, PackageOpenIcon, PlusIcon, SearchIcon, TrashIcon } from "lucide-react";
 import Link from "next/link";

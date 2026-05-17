@@ -71,9 +71,10 @@ export const AnthropicDialog = (
             form.reset({
                 variableName: defaultValues.variableName || "",
                 systemPrompt: defaultValues.systemPrompt || "",
-                userPrompt: defaultValues.userPrompt || "",})
+                userPrompt: defaultValues.userPrompt || "",
                 credentialId: defaultValues.credentialId || ""    
-        }
+        })
+            }
     },[open, defaultValues, form])
 
     const watchVariableName = form.watch("variableName") || "myAnthropic"

@@ -86,9 +86,9 @@ export const GeminiDialog = (
     <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Gemini Configuration</DialogTitle>
+                <DialogTitle>Discord Configuration</DialogTitle>
                 <DialogDescription>
-                    Configure the AI model and prompts for this node.
+                    Configure the Discord webhook settings for this node.
                 </DialogDescription>
             </DialogHeader>
             <Form {...form}>

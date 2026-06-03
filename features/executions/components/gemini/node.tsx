@@ -55,7 +55,7 @@ export const GeminiNode = memo((props:NodeProps<GeminiNodeType>) => {
     const nodeData =  props.data;
     // console.log(nodeData)
     const description = nodeData?.userPrompt
-     ?  `gemini-2.0-flash : ${nodeData.userPrompt.slice(0,50)}...`: "Not configured"
+     ?  `gemini-3.0-flash : ${nodeData.userPrompt.slice(0,50)}...`: "Not configured"
      ;
 
     //  console.log(description)

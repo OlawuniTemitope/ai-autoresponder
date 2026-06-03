@@ -5,6 +5,7 @@ import {createGoogleGenerativeAI} from "@ai-sdk/google"
 import { geminiChannel } from "@/inngest/channels/gemini";
 import { NonRetriableError } from "inngest";
 import prisma from "@/lib/db";
+import { decrypt } from "@/lib/encryption";
 
 
 Handlebars.registerHelper("json", (context)=>
@@ -90,7 +91,7 @@ export const geminiExecutor: NodeExecutor<GeminiData> = async ({
 
     
     const google = createGoogleGenerativeAI({
-        apiKey: credential.value,
+        apiKey: decrypt(credential.value),
     })
 
 try{
@@ -98,7 +99,7 @@ try{
         "gemini-generate-text",
         generateText,
         {
-            model: google(data.model ||"gemini-2.0-flash"),
+            model: google(data.model ||'gemini-2.5-flash'),
             system: systemPrompt,
             prompt: userPrompt,
             experimental_telemetry: {

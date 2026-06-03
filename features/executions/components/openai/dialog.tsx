@@ -28,7 +28,7 @@ const formSchema = z.object({
     variableName: z.string().min(1,{message: "Variable bame is required"}).regex(/^[A-Za-z0-9_$]*$/, {
         message: "variable name must start with a letter or underscore and contain only latters, numbers, and underscores"
     }),
-    model: z.string().min(1, "Model is required"),
+    // model: z.string().min(1, "Model is required"),
     systemPrompt: z.string().optional(),
     credentialId: z.string().min(1, "Credential is required"),
     userPrompt: z.string().min(1, "User prompt is required")
@@ -96,7 +96,7 @@ export const OpenAiDialog = (
             <Form {...form}>
                 <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="space-y-8 mt-4"
+                className="space-y-8 mt-4 max-h-[80vh] overflow-y-auto flex flex-col"
                 >   
                 <FormField
                     control={form.control}
@@ -164,27 +164,6 @@ export const OpenAiDialog = (
                 </FormItem>
             )}
             />                       
-                            <FormField
-                            control={form.control}
-                            name="systemPrompt"
-                        render={({field})=>(
-                        <FormItem>
-                            <FormLabel>System Prompt (Optional)</FormLabel>
-                            <FormControl>
-                                <Input
-                                placeholder="You are a helpful assistant"
-                                 className="font-mono text-sm min-h-[80px]"
-                                 {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                Sets the behavior of the assistant. Use {"{{variable}}"} for
-                                simple values or {"{{json variable}}"} to
-                                stringify objects
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )} />
-                    
                             <FormField
                             control={form.control}
                             name="systemPrompt"

@@ -187,7 +187,7 @@ export const HttpRequestDialog = (
                         </FormItem>
                     )} />
                 )
-                    }
+            }
                     <DialogFooter className="mt-4">
                         <Button type="submit">Save</Button>
                     </DialogFooter>

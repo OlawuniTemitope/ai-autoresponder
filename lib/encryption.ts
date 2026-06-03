@@ -1,0 +1,6 @@
+import Cryptr from 'cryptr'
+
+const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!) // default key
+
+export const encrypt = (text:string) => cryptr.encrypt(text)
+export const decrypt = (text:string) => cryptr.decrypt(text)

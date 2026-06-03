@@ -5,6 +5,7 @@ import {createOpenAI} from "@ai-sdk/openai"
 import { NonRetriableError } from "inngest";
 import { openAiChannel } from "@/inngest/channels/open-ai";
 import prisma from "@/lib/db";
+import { decrypt } from "@/lib/encryption";
 
 
 Handlebars.registerHelper("json", (context)=>
@@ -87,7 +88,7 @@ export const openAiExecutor: NodeExecutor<OpenAiData> = async ({
     
     
     const openai = createOpenAI({
-        apiKey: credential.value,
+        apiKey: decrypt(credential.value),
     })
 
 try{

@@ -28,7 +28,7 @@ const formSchema = z.object({
     variableName: z.string().min(1,{message: "Variable bame is required"}).regex(/^[A-Za-z0-9_$]*$/, {
         message: "variable name must start with a letter or underscore and contain only latters, numbers, and underscores"
     }),
-    model: z.string().min(1, "Model is required"),
+    // model: z.string().min(1, "Model is required"),
        credentialId: z.string().min(1, "Credential is required"),
     systemPrompt: z.string().optional(),
     userPrompt: z.string().min(1, "User prompt is required")

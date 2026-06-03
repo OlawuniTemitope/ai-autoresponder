@@ -4,9 +4,11 @@ import useSuspenceCredentials, { useDeleteCredential } from '../hooks/use-creden
 import { useRouter } from 'next/navigation'
 import { useCredentialsParams } from '../hooks/use-credentials-params'
 import { useEntitySearch } from '@/hooks/use-entity-search'
-import { Credential, CredentialType } from '@/lib/generated/prisma/client'
+
 import { formatDistanceToNow } from 'date-fns'
 import Image from 'next/image'
+import { CredentialType } from '@/lib/generated/prisma/enums'
+import { Credential } from '@/lib/generated/prisma/browser'
 
 export  const CredentialsSearch = () =>{
  const [params, setParams] = useCredentialsParams()
@@ -45,7 +47,7 @@ export const CredentialsHeader = ({disabled}: {disabled?:boolean}) =>{
     title="Credentials"
     description="create and manage your Credentials"
     newButtonLabel='New Credential'
-    newButtonHref={"/credential/new"}
+    newButtonHref={"/credentials/new"}
     disabled={disabled}
     />
 

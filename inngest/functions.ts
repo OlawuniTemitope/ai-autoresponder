@@ -25,7 +25,7 @@ import { slackChannel } from "./channels/slack";
 
 export const executeWorkflow = inngest.createFunction(
   { id: "execute-workflow", 
-    // retries:0
+    retries:0,
     onFailure: async ({event, step}) =>{
       return prisma.execution.update({
         where: {ingestEventId: event.data.event.id},

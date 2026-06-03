@@ -25,11 +25,12 @@ import Image from "next/image";
 
  
 const formSchema = z.object({
-    variableName: z.string().min(1,{message: "Variable bame is required"}).regex(/^[A-Za-z0-9_$]*$/, {
+    variableName: z.string().min(1,{message: "Variable bame is required"})
+    .regex(/^[A-Za-z_$][A-Za-z0-9_$]*$/, {
         message: "variable name must start with a letter or underscore and contain only latters, numbers, and underscores"
     }),
     credentialId: z.string().min(1, "Credential is required"),
-    model: z.string().min(1, "Model is required"),
+    // model: z.string().min(1, "Model is required"),
     systemPrompt: z.string().optional(),
     userPrompt: z.string().min(1, "User prompt is required")
 })
@@ -83,18 +84,19 @@ export const GeminiDialog = (
         onOpenChange(false)
     }
   return(
+
     <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>Discord Configuration</DialogTitle>
+                <DialogTitle>Gemini Configuration</DialogTitle>
                 <DialogDescription>
-                    Configure the Discord webhook settings for this node.
+                    Configure the Gemini settings for this node.
                 </DialogDescription>
             </DialogHeader>
             <Form {...form}>
                 <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="space-y-8 mt-4"
+                className="space-y-8 mt-4 max-h-[80vh] overflow-y-auto flex flex-col"
                 >   
                 <FormField
                     control={form.control}
@@ -186,27 +188,6 @@ export const GeminiDialog = (
                     
                             <FormField
                             control={form.control}
-                            name="systemPrompt"
-                        render={({field})=>(
-                        <FormItem>
-                            <FormLabel>System Prompt (Optional)</FormLabel>
-                            <FormControl>
-                                <Input
-                                placeholder="You are a helpful assistant"
-                                 className="font-mono text-sm min-h-[80px]"
-                                 {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                Sets the behavior of the assistant. Use {"{{variable}}"} for
-                                simple values or {"{{json variable}}"} to
-                                stringify objects
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )} />
-                    
-                            <FormField
-                            control={form.control}
                             name="userPrompt"
                         render={({field})=>(
                         <FormItem>
@@ -224,9 +205,7 @@ export const GeminiDialog = (
                             </FormDescription>
                             <FormMessage/>
                         </FormItem>
-                    )} />
-                
-                    
+                    )} />               
                     <DialogFooter className="mt-4">
                         <Button type="submit">Save</Button>
                     </DialogFooter>
@@ -234,5 +213,6 @@ export const GeminiDialog = (
             </Form>
             </DialogContent>
     </Dialog>
+   
   )
 }

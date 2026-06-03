@@ -2,12 +2,14 @@
 import { EmptyView, EntityContainer, EntityHeader, EntityItem, EntityList, EntityPagination, EntitySerch, ErrorView, LoadingView } from '@/components/entity-components'
 import { useRouter } from 'next/navigation'
 import { useEntitySearch } from '@/hooks/use-entity-search'
-import { Credential, CredentialType, Execution, ExecutionStatus } from '@/lib/generated/prisma/client'
+
 import { formatDistanceToNow } from 'date-fns'
 import Image from 'next/image'
 import useSuspenceExecutions from '../hooks/use-executions'
 import { useExecutionParams } from '../hooks/use-executions-params'
 import { CheckCircle2Icon, ClockIcon, Loader2Icon, XCircleIcon } from 'lucide-react'
+import { ExecutionStatus } from '@/lib/generated/prisma/enums'
+import { Execution } from '@/lib/generated/prisma/browser'
 
 
  export const ExecutionList = () => {

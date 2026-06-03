@@ -19,9 +19,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { useCredentialsByType } from "@/features/credential/hooks/use-credentials";
-import { CredentialType } from "@/lib/generated/prisma/enums";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Image from "next/image";
+import { CredentialType } from "@/lib/generated/prisma/enums";
 
  
 const formSchema = z.object({

@@ -1,6 +1,7 @@
 // import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { NonRetriableError, step } from "inngest";
 import { inngest } from "./client";
+import { Realtime } from "@inngest/realtime";
 import prisma from "@/lib/db";
 import { topologicalSort } from "./utils";
 import { ExecutionStatus, NodeType } from "@/lib/generated/prisma/enums";
@@ -51,9 +52,10 @@ export const executeWorkflow = inngest.createFunction(
       slackChannel(),
     ]
    },
-  async ({ event, step, publish }) => {
+  async ({ event, step, ...rest }) => {
     const ingestEventId = event.id;
     const workflowId = event.data.workflowId;
+    const publish = (rest as any).publish as Realtime.PublishFn;
 
     if(!ingestEventId || !workflowId){
       throw new NonRetriableError("Event ID or workflow Id is missing")

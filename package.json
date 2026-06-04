@@ -47,7 +47,7 @@
     "generate": "^0.14.0",
     "handlebars": "^4.7.9",
     "html-entities": "^2.6.0",
-    "inngest": "^3.48.1",
+    "inngest": "^3.54.0",
     "jotai": "^2.16.2",
     "ky": "^1.14.3",
     "lucide-react": "^0.556.0",

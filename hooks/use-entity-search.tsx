@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import { PAGINATION } from "@/config/constant";
 
-// API1=AQ.Ab8RN6LVvuNnN3NcuzlBxkJyKnWzMJK5v4T6yQ3x1qcZofKw-A
-// API=AQ.Ab8RN6LVvuNnN3NcuzlBxkJyKnWzMJK5v4T6yQ3x1qcZofKw-A
 
 interface UseEntitySearchProps<T extends {
     search: string;

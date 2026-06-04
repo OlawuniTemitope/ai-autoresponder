@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { PAGINATION } from "@/config/constant";
 
-
 interface UseEntitySearchProps<T extends {
     search: string;
     page: number}> {
